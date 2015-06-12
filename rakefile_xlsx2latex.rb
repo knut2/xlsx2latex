@@ -8,7 +8,7 @@ require 'knut-gempackager'
 
 $:.unshift('lib')
 require 'xlsx2latex'
-$xlsx2latex_version = "0.1.0.rc2"
+$xlsx2latex_version = "0.1.0.rc3"
 
 #http://docs.rubygems.org/read/chapter/20
 gem_xlsx2latex = Knut::Gem_packer.new('xlsx2latex', $xlsx2latex_version){ |gemdef, s|
@@ -16,7 +16,8 @@ gem_xlsx2latex = Knut::Gem_packer.new('xlsx2latex', $xlsx2latex_version){ |gemde
   s.version =  $xlsx2latex_version
   s.author = "Knut Lickert"
   s.email = "knut@lickert.net"
-  s.homepage = "https://rubygems.org/gems/xlsx2latex"
+  s.homepage = "https://github.com/knut2/xlsx2latex"
+  #~ s.homepage = "https://rubygems.org/gems/xlsx2latex"
   s.platform = Gem::Platform::RUBY
   s.required_ruby_version = '>= 2.0' #uses new interface
   s.license = 'LPPL-1.3c'

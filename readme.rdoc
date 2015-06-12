@@ -3,6 +3,9 @@ Convert excel-files (xlsx) to LaTeX-tabulars.
 
 Details see XLSX2LaTeX::Excel
 
+This gem is located at
+* https://github.com/knut2/xlsx2latex
+* https://rubygems.org/gems/xlsx2latex
 
 ==Why?
 This gem is inpired by a question at 

@@ -7,7 +7,8 @@ Gem XLSX2LaTeX: Convert excel-files to LaTeX-tabulars.
   
 
 module XLSX2LaTeX
-  VERSION = '0.1.0.rc2'
+  #{<img src="https://badge.fury.io/rb/xlsx2latex.svg" alt="Gem Version" />}[http://badge.fury.io/rb/xlsx2latex]
+  VERSION = '0.1.0.rc3'
 end #Xlsx2latex
 
 require 'roo'
