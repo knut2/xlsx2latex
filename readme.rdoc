@@ -1,0 +1,97 @@
+﻿=XLSX2LaTeX
+Convert excel-files (xlsx) to LaTeX-tabulars.
+
+Details see XLSX2LaTeX::Excel
+
+
+==Why?
+This gem is inpired by a question at 
+stackexchange[http://softwarerecs.stackexchange.com/questions/2428/program-to-convert-excel-2013-spreadsheets-to-latex-tables].
+My first impression was:
+It should be easy to write such a converter with ruby.
+
+This gem is a quick try to solve the problem.
+It uses roo[https://github.com/roo-rb/roo] to parse an excel and convert
+the result to LaTeX.
+
+==How to use
+There is a command line version for this gem.
+
+For a help, please use 
+  bin/xlsx2latex.rb -h
+
+output[bin/readme_txt.html]
+
+
+==Philosophy
+This gem allows a fast way to convert an Excel-Sheet to a LaTeX-tabular.
+
+It is not expected, that you get a ready-to-use-result.
+
+* The column format is 'c' for each column
+* Text formats are respected if the are defined fo the whole cell.
+* No gridlines are analyzed. Please set your \hlines yourself.
+
+==Limitation
+There are some limitations:
+
+* Only tabular-like sheets are converted (e.g. no graphics)
+* \multicolumn: The detection of multicolumns is a kind of guessing.
+* \multirow: Not supported
+
+===Format
+
+* Bold, italic... are only detected if the whole cell is formated.
+* Gridlines are not analyzed.
+
+
+
+=Similar tools
+==excel2latex
+* http://www.ctan.org/pkg/excel2latex
+
+Excel-Makros to build LaTeX-table. 
+Works until Excel version 2010
+
+==maketable
+* http://www.ctan.org/tex-archive/support/maketable
+
+MAKETABLE works with copy and paste. You mark your table in the 
+respective Windows program, hit copy, change to MAKETABLE and 
+click the Paste-Button. This pastes your data into a data grid. 
+When you click the TEX-Output-Button, the information in the data 
+grid is converted to the respective tabular structure, which is 
+displayed in a new window. Click the Mark all-Button and the 
+Copy-Button to copy the tabular structure to the clipboard, change 
+to your TeX-editor and paste it in.
+
+==xl2latex
+* http://www.ctan.org/tex-archive/support/xl2latex
+
+Works only with Excel97 (and hopefully above, you never know what Microsoft does)
+
+Import xl2latex.bas in Visual Basic and save as xl2latex.xls (or any other filename).
+
+To do so: open a new file or a file with all your macros
+          Extras->Macro->Visual Basic-Editor
+          then in Visual Basic: File->File import
+          close Visual Basic
+          save the file (File->Save As or File->Save, what you want)
+          close the file
+          now you should have a new button "LaTeX export" in your "LaTeX" toolbar
+
+
+==Online tools
+===http://www.tablesgenerator.com/
+With http://www.tablesgenerator.com/ you can create empty templates for LaTeX tables.
+
+===http://ericwood.org/excel2latex/
+
+Drag any .xlsx file onto the page to extract data and convert it into a LaTeX table.
+
+* Javascript
+* No conversion of special characters
+* Only default sheet
+
+=====...
+

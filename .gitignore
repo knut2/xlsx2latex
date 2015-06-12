@@ -1,0 +1,6 @@
+doc
+*.exe
+archive/analyze_time_in_excel.7z
+*.pdf
+*.tex
+/*.gem
