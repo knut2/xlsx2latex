@@ -28,7 +28,15 @@ The supported options (with defaults):
 * Boolean:
   * bool_true: 'X', 
   * bool_false: '-',
+* auto_width: See details below
 
+==auto_width
+The option quto_width sets the column width to longest value of the column.
+
+* The columns are right justified.
+  (On this level there is no difference between numbers and strings.
+  And it is easier to read right justified strings then left justified numbers).
+* In combination with multicolumns the result may be confusing.
 =end
     def initialize(filename,
               string_format: '%s',
@@ -36,6 +44,7 @@ The supported options (with defaults):
               date_format: '%Y-%m-%d',
               time_format: '%Y-%m-%d %H:%M',
               bool_true: 'X', bool_false: '-',
+              auto_width: false,
               log_outputter: Log4r::StdoutOutputter.new('stdout')
             )
       @filename = filename
@@ -76,6 +85,7 @@ Options are:
                   date_format: @date_format,
                   time_format: @time_format,
                   bool_true: @bool_true, bool_false: @bool_false,
+                  auto_width: @auto_width,
                   xxx: nil
         )
       @xlsx.sheet(sheetname)  #set default sheetname
@@ -84,10 +94,11 @@ Options are:
       
       tex = []
       max_columns = 1
+      widths = Hash.new(0) #maximum width per column. Needed for auto_width
       sheet.each_row do |line|
         lineval = []
         max_columns = @xlsx.last_column if @xlsx.last_column > max_columns
-        line.each{| cell |
+        line.each_with_index{| cell,colnum |
           @log.debug("%s(%i,%i): %s <%s> %s" % [sheetname,cell.coordinate.column,cell.coordinate.row, cell.type.inspect, cell.value.inspect, cell.inspect]) if @log.debug?
           right_justified = false
         
@@ -98,6 +109,9 @@ Options are:
               when /multicolumn\{(\d+)\}/
                 lineval.last.sub!(/multicolumn\{(\d+)\}/, 'multicolumn{%i}' % [$1.to_i + 1])
               else #First combined cell
+                #Ignore the width of the mutlicolumn command.
+                #I expect the merged cells are long enough to compensate the additional length
+                widths[colnum-1] = lineval.last.size if lineval.last.size > widths[colnum-1]
                 lineval << ('\multicolumn{2}{c}{%s}' % lineval.pop)
               end
             next
@@ -141,12 +155,26 @@ Options are:
             value = string_format % value if cell.type == :string
           end
           lineval  << value
+          widths[colnum] = value.to_s.size if value.to_s.size > widths[colnum]
         }
-        tex << lineval.join(' & ')
+        tex << lineval
       end
+      #Prepare auto width if requested
+      tex.map{|tabline|
+        tabline.map!.with_index{|cell,i| 
+          if cell =~ /\\multicolumn\{(\d+)\}/ #Calculate offset for next column
+            width = -3  #3 corresponds to the ' & ' and we need one less.
+            i.upto($1.to_i){|i2| width += widths[i2] + 3} #calculate width up to next cell
+            '%-*s' % [width,cell]
+          else
+            '%*s' % [widths[i],cell]
+          end
+        }
+      } if auto_width
+
       [
         "\\begin{tabular}{%s}" % ('c|'* max_columns),
-        tex.join("\\\\\n"),
+        tex.map{|tabline| tabline.join(' & ')}.join("\\\\\n"),
         '\end{tabular}'
       ].join("\n")
     end

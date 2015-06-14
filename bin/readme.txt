@@ -14,7 +14,7 @@ Options
     -t, --target TARGET              target filename (default STDOUT)
     -s, --sheet SHEET                Source sheet in Excel (default: all)
     -f, --float FLOAT                Format for floats
-    -w, --width WIDTH                Default column width
+    -w, --width WIDTH                Default column width (or 'auto')
     -d, --date DATE                  Format for dates
         --time TIME                  Format for times
         --true TRUE                  Format for true

@@ -81,6 +81,11 @@ LOG
     assert_equal(0,$?.exitstatus)
     assert_equal_filecontent('expected/%s.tex' % __method__, output)
   end 
+  def test_bin_width_auto
+    output = `#{@cmd_src} -w auto`
+    assert_equal(0,$?.exitstatus)
+    assert_equal_filecontent('expected/%s.tex' % __method__, output)
+  end 
 end
 
 #Make the same tests with the exe

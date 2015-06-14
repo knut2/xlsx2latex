@@ -141,6 +141,3 @@ if $0 == __FILE__
   app[:default].invoke
 end
 __END__
-
-Todos:
-* Use of booktabs?

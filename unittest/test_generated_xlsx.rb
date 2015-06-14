@@ -59,8 +59,14 @@ INFO
   def test_sheet_data_boolean
     assert_equal_filecontent('expected/generated_%s.tex' % __method__, @excel.to_latex(sheetname: 'DATA', bool_true: 'yes', bool_false: 'no'))
   end
+  def test_sheet_data_auto_width
+    assert_equal_filecontent('expected/generated_%s.tex' % __method__, @excel.to_latex(sheetname: 'DATA', auto_width: true))
+  end
   def test_sheet_merged_areas
     assert_equal_filecontent('expected/generated_%s.tex' % __method__, @excel.to_latex(sheetname: 'Merged Areas'))
+  end
+  def test_sheet_merged_areas_auto_width
+    assert_equal_filecontent('expected/generated_%s.tex' % __method__, @excel.to_latex(sheetname: 'Merged Areas', auto_width: true))
   end
   def test_sheet_format
     assert_equal_filecontent('expected/generated_%s.tex' % __method__, @excel.to_latex(sheetname: 'Formats'))

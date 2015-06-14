@@ -27,9 +27,13 @@ opt_parser = OptionParser.new do |opt|
   end
   
   #This width definition is not valid for date, time and boolean.
-  opt.on("-w","--width WIDTH","Default column width") do |width|
-    options[:string_format] = '%%-%ss' % width                          #left justified
-    options[:float] = '%%%s.2f' % width unless options[:float]     #right justified
+  opt.on("-w","--width WIDTH","Default column width (or 'auto')") do |width|
+    if width == 'auto'
+      options[:autowidth] = true
+    else
+      options[:string_format] = '%%-%ss' % width                          #left justified
+      options[:float] = '%%%s.2f' % width unless options[:float]     #right justified
+    end
   end
   
   opt.on("-d","--date DATE","Format for dates") do |date|
@@ -138,6 +142,7 @@ sheets.each do |sheetname|
     time_format:  options[:time] || '%Y-%m-%d %H:%M',
     bool_true: options[:true] || 'X',
     bool_false: options[:false] || '-',
+    auto_width: options[:autowidth],
   )
 end
 
