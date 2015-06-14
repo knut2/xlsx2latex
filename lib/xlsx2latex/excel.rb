@@ -21,6 +21,7 @@ call-seq:
   Excel.new(filename, [options])
 
 The supported options (with defaults):
+* string_format: '%s'
 * float_format: '%0.2f'
 * date_format: '%Y-%m-%d',
 * time_format: '%Y-%m-%d %H:%M',
@@ -30,6 +31,7 @@ The supported options (with defaults):
 
 =end
     def initialize(filename,
+              string_format: '%s',
               float_format: '%0.2f',
               date_format: '%Y-%m-%d',
               time_format: '%Y-%m-%d %H:%M',
@@ -42,6 +44,7 @@ The supported options (with defaults):
       @log.level = Log4r::INFO
       
       @xlsx = Roo::Excelx.new(filename)      
+      @string_format = string_format
       @float_format = float_format
       @date_format = date_format
       @time_format = time_format
@@ -68,6 +71,7 @@ Options are:
 * The default from ::new for the conversions can be redefined for each tabular.
 =end
     def to_latex(sheetname: @xlsx.default_sheet,
+                  string_format: @string_format,
                   float_format: @float_format,
                   date_format: @date_format,
                   time_format: @time_format,
@@ -77,7 +81,7 @@ Options are:
       @xlsx.sheet(sheetname)  #set default sheetname
       sheet = @xlsx.sheet_for(sheetname)
       @log.info("Convert Sheet %s to LaTeX" % sheetname)
-
+      
       tex = []
       max_columns = 1
       sheet.each_row do |line|
@@ -85,6 +89,7 @@ Options are:
         max_columns = @xlsx.last_column if @xlsx.last_column > max_columns
         line.each{| cell |
           @log.debug("%s(%i,%i): %s <%s> %s" % [sheetname,cell.coordinate.column,cell.coordinate.row, cell.type.inspect, cell.value.inspect, cell.inspect]) if @log.debug?
+          right_justified = false
         
           case cell.type
           when nil  #Overwritten parts in multicol/multirow
@@ -99,7 +104,7 @@ Options are:
           when :float
             value = float_format % cell.value
           when :string
-            value = cell.value
+            value = string_format % cell.value
           when :formula
             @log.info("%s(%i,%i): Found formula %s. Take result %s" % [sheetname,cell.coordinate.column,cell.coordinate.row, cell.formula, cell.value])
             value = cell.value
@@ -130,9 +135,10 @@ Options are:
           end
           
           if font = @xlsx.font(cell.coordinate.row,cell.coordinate.column)
-            value = '\textbf{%s}' % value if font.bold?
-            value = '\emph{%s}'  % value if font.italic?
-            value = '\underline{%s}' % value if font.underline?
+            value = '\textbf{%s}' % value.strip if font.bold?
+            value = '\emph{%s}'  % value.strip if font.italic?
+            value = '\underline{%s}' % value.strip if font.underline?
+            value = string_format % value if cell.type == :string
           end
           lineval  << value
         }

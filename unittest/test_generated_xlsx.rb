@@ -44,6 +44,9 @@ INFO
   def test_sheet_data
     assert_equal_filecontent('expected/generated_%s.tex' % __method__, @excel.to_latex(sheetname: 'DATA'))
   end
+  def test_sheet_data_stringformat_10
+    assert_equal_filecontent('expected/generated_%s.tex' % __method__, @excel.to_latex(sheetname: 'DATA', string_format: '%-10s'))
+  end
   def test_sheet_data_floatformat
     assert_equal_filecontent('expected/generated_%s.tex' % __method__, @excel.to_latex(sheetname: 'DATA', float_format: '%0.0f',))
   end
