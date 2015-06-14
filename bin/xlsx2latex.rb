@@ -26,6 +26,12 @@ opt_parser = OptionParser.new do |opt|
     options[:float] = float
   end
   
+  #This width definition is not valid for date, time and boolean.
+  opt.on("-w","--width WIDTH","Default column width") do |width|
+    options[:string_format] = '%%-%ss' % width                          #left justified
+    options[:float] = '%%%s.2f' % width unless options[:float]     #right justified
+  end
+  
   opt.on("-d","--date DATE","Format for dates") do |date|
     options[:date] = date
   end
@@ -126,6 +132,7 @@ sheets.each do |sheetname|
   texcode << "\n\n%%\n%%Source: %s [%s]\n%%\n" % [ ARGV[0], sheetname]
   texcode << $excel.to_latex(
     sheetname: sheetname,
+    string_format: options[:string_format] || '%s',
     float_format: options[:float] || '%0.2f',
     date_format: options[:date] || '%Y-%m-%d',
     time_format:  options[:time] || '%Y-%m-%d %H:%M',

@@ -11,9 +11,7 @@ require 'xlsx2latex'
 
 class Test_bin < MiniTest::Test
   def setup
-    #~ @cmd = 'ruby ../bin/xlsx2latex.rb'
-    @cmd = '../bin/xlsx2latex.exe'
-    skip('%s not available' % @cmd) unless File.exist?(@cmd)
+    @cmd = 'ruby ../bin/xlsx2latex.rb'
     @src = 'testdata/simple.xlsx'
     @cmd_src = [@cmd, @src].join(' ')
   end
@@ -77,6 +75,22 @@ LOG
     assert_equal(0,$?.exitstatus)
     assert_equal_filecontent('expected/%s.tex' % __method__, output)
   end 
+  
+  def test_bin_width10
+    output = `#{@cmd_src} -w 10`
+    assert_equal(0,$?.exitstatus)
+    assert_equal_filecontent('expected/%s.tex' % __method__, output)
+  end 
 end
+
+#Make the same tests with the exe
+class Test_bin_exe < Test_bin
+  def setup
+    super
+    @cmd = '../bin/xlsx2latex.exe'
+    skip('%s not available' % @cmd) unless File.exist?(@cmd)
+  end
+end if false
+
 __END__
   
